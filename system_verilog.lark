@@ -1,57 +1,41 @@
 // SystemVerilog grammar for Lark
 // Author : German Cano Quiveu germancq@dte.us.es
-?header_module: MODULE [list_parameters] CNAME list_ports
+
+module: header_module code end_module
+
+
+header_module: MODULE CNAME [list_parameters] list_ports
+end_module: END_MODULE ":" CNAME
  
-?list_parameters: "#("(parameter ",")* parameter ")"
-?list_ports: "("(port ",")*  port");"
+list_parameters: "#("(parameter ",")* parameter ")"
+list_ports: "("(port ",")*  port");"
 
 
-?port: input | output
-?parameter: PARAMETER CNAME "=" value 
+port: input | output
+parameter: PARAMETER CNAME "=" value 
 
-?input :INPUT [LOGIC] [size] CNAME [size] 
-?output :OUTPUT [LOGIC] [size] CNAME [size] 
-
-
-//?code : (statement)*
-//?statement : localparam | assign | variable | instance | always_comb | always_ff
-
-//?instance : CNAME [list_inst_parameters] list_inst_ports
-
-//?list_inst_parameters: "#("(inst_parameter ",")* inst_parameter ")"
-//?list_inst_ports: "("(inst_port ",")*  inst_port");"
-//?inst_parameter: "."CNAME"("parameter_value")"
-//?inst_port: "."CNAME"("inst_var")"
-
-//?assign : ASSIGN inst_var "=" inst_var ";"
+input :INPUT [LOGIC] [size] CNAME [size] 
+output :OUTPUT [LOGIC] [size] CNAME [size] 
 
 
-//?localparam : LOCALPARAM CNAME "=" parameter_value
+variable: type [size] CNAME [size] ";"
+assign: ASSIGN CNAME "=" expresion ";"
 
-//?always_comb : ALWAYS_COMB ["begin"] (always_comb_instruction)+ ["end"]
 
-//?always_comb_instruction : block_assigment | case_block | if_else_statement
+inst_var: [size|access_bit] CNAME [size|access_bit]
 
-//?block_assigment: inst_var "=" parameter_value ";"
+parameter_value: value | inst_var
 
 
 
-?variable: LOGIC [size] CNAME [size] ";"
+value: number | CNAME
+number: SIGNED_NUMBER | HEX_NUMBER 
 
-?inst_var: [size|access_bit] CNAME [size|access_bit]
-
-?parameter_value: value | inst_var
-
-
-
-?value: number | CNAME
-?number: SIGNED_NUMBER | HEX_NUMBER 
-
-?size: "["value":"value"]"
-?access_bit: "["value"]"
+size: "["value":"value"]"
+access_bit: "["value"]"
 
 
-
+type : LOGIC | WIRE
 
 
 
