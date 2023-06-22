@@ -9,8 +9,8 @@ from lark import Lark
 import sys
 import re
 
-kwargs = dict(rel_to=__file__, start='header_module')
-sv_parser = Lark.open('system_verilog.lark',parser='earley', lexer='basic', **kwargs)
+kwargs = dict(rel_to=__file__, start='module')
+sv_parser = Lark.open('system_verilog.lark',parser='earley', lexer='standard', **kwargs)
 
 
 def _read(fn, *args):
@@ -45,4 +45,4 @@ def _readHeaderModule(fn, *args):
 if __name__ == '__main__':
     with open(sys.argv[1],"r") as f:
         tree = sv_parser.parse(f.read()) 
-        #print( tree.pretty() )
+        print( tree.pretty() )

@@ -1,39 +1,59 @@
 // SystemVerilog grammar for Lark
 // Author : German Cano Quiveu germancq@dte.us.es
 
-module: header_module code end_module
+
+module: (header_module [code] end_module)+
 
 
 header_module: MODULE CNAME [list_parameters] list_ports
-end_module: END_MODULE ":" CNAME
+end_module: END_MODULE [":" CNAME]
+code: (assign | inst_var | variable | inst_module)*
+
+
  
-list_parameters: "#("(parameter ",")* parameter ")"
-list_ports: "("(port ",")*  port");"
+list_parameters: "#(" [(parameter ",")*] parameter ")"
+
+list_ports: "(" [(port ",")* port] ");"
 
 
 port: input | output
-parameter: PARAMETER CNAME "=" value 
+parameter: _PARAMETER name "=" value 
 
-input :INPUT [LOGIC] [size] CNAME [size] 
-output :OUTPUT [LOGIC] [size] CNAME [size] 
+input :_INPUT [LOGIC] [size] name [size] 
+output :_OUTPUT [LOGIC] [size] name [size] 
 
+name: CNAME
 
 variable: type [size] CNAME [size] ";"
 assign: ASSIGN CNAME "=" expresion ";"
 
 
+inst_module: name_mod [inst_parameters] name_inst [inst_ports]
+
+name_mod: CNAME
+name_inst: CNAME
+inst_parameters: "#(" [(inst_param ",")*] inst_param ")"
+inst_ports: "(" [(inst_port ",")*] [inst_port] ");"
+
+inst_param: "." name "(" parameter_value ")"
+inst_port: "." name "(" port_value ")"
+
 inst_var: [size|access_bit] CNAME [size|access_bit]
 
 parameter_value: value | inst_var
+port_value: value | inst_var
+
+expresion: value | ternary_op 
+
+ternary_op: expresion "?" expresion ":" expresion 
+
+value: SIGNED_NUMBER | HEX_NUMBER | CNAME
+ 
 
 
-
-value: number | CNAME
-number: SIGNED_NUMBER | HEX_NUMBER 
-
-size: "["value":"value"]"
-access_bit: "["value"]"
-
+size: "["size_part":"size_part"]"
+access_bit: "["(value)+"]"
+size_part: (value)+ 
 
 type : LOGIC | WIRE
 
@@ -42,9 +62,9 @@ type : LOGIC | WIRE
 MODULE: "module"
 END_MODULE: "endmodule"
 
-INPUT: "input"
-OUTPUT: "output"
-PARAMETER: "parameter"
+_INPUT: "input"
+_OUTPUT: "output"
+_PARAMETER: "parameter"
 LOGIC : "logic"
 WIRE : "wire"
 ALWAYS_COMB: "always_comb"
@@ -64,5 +84,7 @@ HEX_NUMBER: /0x[\da-f]*l?/i
 %import common.C_COMMENT
 %import common.CPP_COMMENT
 COMMENT : C_COMMENT | CPP_COMMENT
+NEWLINE: "\n"
 %ignore WS
 %ignore COMMENT
+%ignore NEWLINE
