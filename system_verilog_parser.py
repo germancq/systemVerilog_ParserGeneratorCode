@@ -26,8 +26,6 @@ if __name__ == '__main__':
         #print( tree.pretty() )
         ports = tree.find_data(data='port')
         for port in ports:
-            #print(port.pretty())
-            #print('stop')
             port_inst = system_verilog_classes.Port(port,tree)
             
             print(port_inst.direction)
