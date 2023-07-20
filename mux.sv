@@ -11,7 +11,7 @@ module mux
 
 endmodule : mux
 
-
+/*
 module mux_4 
 #(parameter DATA_WIDTH = 8)
 (
@@ -50,3 +50,4 @@ mux #(.DATA_WIDTH(DATA_WIDTH)) m10(
 
 
 endmodule : mux_4
+*/

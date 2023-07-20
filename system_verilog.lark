@@ -19,12 +19,12 @@ list_ports: "(" [(port ",")* port] ");"
 port: input | output
 parameter: _PARAMETER name "=" value 
 
-input :_INPUT [LOGIC] [size] name [size] 
-output :_OUTPUT [LOGIC] [size] name [size] 
+input :_INPUT [LOGIC] [size] name [size_2d] 
+output :_OUTPUT [LOGIC] [size] name [size_2d] 
 
 name: CNAME
 
-variable: type [size] CNAME [size] ";"
+variable: type [size] CNAME [size_2d] ";"
 assign: ASSIGN CNAME "=" expresion ";"
 
 
@@ -38,7 +38,7 @@ inst_ports: "(" [(inst_port ",")*] [inst_port] ");"
 inst_param: "." name "(" parameter_value ")"
 inst_port: "." name "(" port_value ")"
 
-inst_var: [size|access_bit] CNAME [size|access_bit]
+inst_var: [size|access_bit] CNAME [size_2d|access_bit]
 
 parameter_value: value | inst_var
 port_value: value | inst_var
@@ -52,6 +52,7 @@ value: SIGNED_NUMBER | HEX_NUMBER | CNAME
 
 
 size: "["size_part":"size_part"]"
+size_2d: "["size_part":"size_part"]"
 access_bit: "["(value)+"]"
 size_part: (value)+ 
 
@@ -88,3 +89,4 @@ NEWLINE: "\n"
 %ignore WS
 %ignore COMMENT
 %ignore NEWLINE
+
